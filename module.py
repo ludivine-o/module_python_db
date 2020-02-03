@@ -9,13 +9,7 @@ def read(cursor):
         print('{0} : {1} - {2} -{3} - {4}'.format(row[0], row[1], row[2], row[3], row[4]))
 
 
-def search(cursor):
-    search_choice = input("souhaitez-vous faire une recherche stricte dans n'importe quel champs (S) "
-                          "ou multiple (qui affiche plusieurs resultats) par nom (M) ? : ").upper()
-    if search_choice == "S":
-        search_field = input("par quel champs souhaitez-vous faire votre recherche ? ").upper()
-        search = input("quel est l'élément recherché dans ce champs : ")
-
+def strict_search(cursor, search_field, search):
         if search_field == 'ID':
             search_field = 'id'
         elif search_field == 'N':
@@ -32,22 +26,15 @@ def search(cursor):
         var = cursor.fetchall()
         return var
 
-    elif search_choice == "M":
-        search = input("quel est le nom de l'élément recherché : ").upper()
+
+def multiple_search(cursor, search):
         cursor.execute(("SELECT * FROM plante WHERE nom LIKE '%{}%' ORDER BY nom ASC, prix ASC LIMIT 3").format(search))
         rows = cursor.fetchall()
         for row in rows:
             print('{0} - {1} : {2} ({3}) - {4} €'.format(row[0], row[1], row[2], row[3], row[4]))
 
 
-
-def insert(db, cursor):
-    id = input("saisir l'ID de la plante à ajouter")
-    nom = input("saisir le nom de la plante à ajouter")
-    indication = input("saisir l'indication de la plante à ajouter")
-    partie_utilisee = input("saisir la partie utilisée de la plante à ajouter")
-    prix = input("saisir le prix de la plante à ajouter")
-
+def insert(db, cursor, id, nom, indication, partie_utilisee, prix):
     cursor.execute("INSERT INTO plante (id, nom, indication, partie_utilisee, prix) "
                    "VALUES ('{}', '{}', '{}', '{}', '{}')".format(
                         id,
@@ -58,17 +45,12 @@ def insert(db, cursor):
     db.commit()
 
 
-
-def delete(db, cursor):
-    del_nom = input("saisir le nom de la plante à supprimer")
+def delete(db, cursor, del_nom):
     cursor.execute("DELETE FROM plante WHERE nom = '" + del_nom + "'")
     db.commit()
 
 
-def modify(db, cursor):
-    mod_nom = input("saisir le nom de la plante à modifier : ")
-    field = input("quel champs souhaitez-vous modifier ? "
-                  "\n (ID)d, (N)om, (I)ndication, (PU)partie_utilisee, (P)rix : ").upper()
+def modify(db, cursor, mod_nom, field):
     if field == 'ID':
         field = 'id'
     elif field == 'N':
@@ -86,10 +68,7 @@ def modify(db, cursor):
     db.commit()
 
 
-def modify_all(db, cursor):
-    field = input \
-        ("quel champs souhaitez-vous modifier ? "
-         "\n (ID)d, (N)om, (I)ndication, (PU)partie_utilisee, (P)rix : ").upper()
+def modify_all(db, cursor, field):
     if field == 'ID':
         field = 'id'
     elif field == 'N':
