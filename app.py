@@ -1,6 +1,9 @@
 import mysql.connector
 import module as action
 
+# TODO : modifier le nom des variables (en anglais dans la BDD)
+
+
 def main():
     db = mysql.connector.connect(host="127.0.0.1", user="ludivineo", password="CN-9564", database="herboriste")
     cursor = db.cursor()
